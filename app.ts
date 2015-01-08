@@ -28,6 +28,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', website.router);
 
+/// redirect all invalid urls back to index
+app.use((req, res) => {
+  res.redirect('/');
+});
+
 /// error handlers
 app.use(errorHandler());
 
