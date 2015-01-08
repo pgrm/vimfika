@@ -4,3 +4,4 @@
 /// <reference path="cookie-parser/cookie-parser.d.ts" />
 /// <reference path="express/express.d.ts" />
 /// <reference path="mongoose/mongoose.d.ts" />
+/// <reference path="errorhandler/errorhandler.d.ts" />

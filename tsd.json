@@ -22,6 +22,9 @@
     },
     "mongoose/mongoose.d.ts": {
       "commit": "4abbdff87f05616cfc421e0bf46c54a0ffdc06ce"
+    },
+    "errorhandler/errorhandler.d.ts": {
+      "commit": "4abbdff87f05616cfc421e0bf46c54a0ffdc06ce"
     }
   }
 }
