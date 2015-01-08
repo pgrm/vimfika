@@ -1,6 +1,22 @@
 <% include header %>
-
-  <h1><%-title %></h1>
-  <p>Welcome to <%-title %></p>
-
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12" style="text-align:center">
+      <h1>Welcome to <%-title %></h1>
+      <h3>Master <a href="http://en.wikipedia.org/wiki/Vim_%28text_editor%29">Vim</a> in little pieaces day by day.</h3>
+      <h3>Sign up for a daily tip about Vim and it's countless features.</h3>
+      <br />
+      <form class="form-inline" action="/signup" method="POST">
+        <div class="form-group">
+          <label for="email" class="sr-only">Email address</label>
+          <div class="input-group">
+            <div class="input-group-addon">Email: </div>
+            <input type="email" class="form-control" id="email" style="width:256px" placeholder="Enter your email address" />
+          </div>
+        </div>
+        <button class="btn btn-default" type="submit">I want to learn Vim</button>
+      </form>
+    </div>
+  </div>
+</div>
 <% include footer %>
