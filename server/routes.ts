@@ -26,8 +26,13 @@ router.post('/signup', (req, res) => {
 function sendConfirmationMailOrHandleSaveErrors(email: string, res: express.Response) {
     return ((error, subscriber: models.ISubscriber) => {
         if (!error) {
-            subscriber.sendConfirmationMail();
-            res.render('confirmationSent', getViewObject({subscriber: subscriber}));
+            subscriber.sendConfirmationMail((err) => {
+                if (!err) {
+                    res.render('confirmationSent', getViewObject({subscriber: subscriber}));
+                } else {
+                    showError(res, err); 
+                }
+            });
         } else {
             showErrorOrResignup(email, res, error);
         }
