@@ -5,3 +5,4 @@
 /// <reference path="express/express.d.ts" />
 /// <reference path="mongoose/mongoose.d.ts" />
 /// <reference path="errorhandler/errorhandler.d.ts" />
+/// <reference path="nodemailer/nodemailer.d.ts" />

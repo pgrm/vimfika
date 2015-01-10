@@ -1,6 +1,7 @@
 /// <reference path="../typings/tsd.d.ts" />
 
 import mongoose = require('mongoose')
+import mails = require('./mails');
 
 export var dbUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/vimfika';
 export var dbConnection = mongoose.createConnection(dbUri);
@@ -68,9 +69,7 @@ export var TokenSchema = new mongoose.Schema({
 
     token.save((err, res: IToken) => {
         if (!err) {
-            // send mail
-            console.log(res._id);
-            cb(null);
+            mails.sendConfirmationMail(s.email, res._id, cb);
         } else {
             cb(err);
         }
