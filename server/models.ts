@@ -26,7 +26,13 @@ export var SubscriberSchema = new mongoose.Schema({
         default: false,
         required: true
     },
-    confirmedAt: Date
+    confirmedAt: Date,
+    unsubscribed: {
+        type: Boolean,
+        default: false,
+        required: true
+    },
+    unsubscribedAt: Date
 });
 
 (<any>SubscriberSchema).methods.sendConfirmationMail = () => {
@@ -38,6 +44,8 @@ export interface ISubscriber extends mongoose.Document {
     subscribedAt?: Date;
     confirmed?: boolean;
     confirmedAt?: Date;
+    unsubscribed?: boolean;
+    unsubscribedAt?: Date;
 
     sendConfirmationMail();
 }

@@ -9,3 +9,44 @@
   <script src="http://localhost:35729/livereload.js"></script>
 </head>
 <body>
+<div class="container">
+  <% if (locals.success) { %>
+    <div class="alert alert-success alert-dismissible" roler="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>Well done!</strong> <%-success %>
+    </div>
+  <% } %>
+  <% if (locals.info) { %>
+    <div class="alert alert-info alert-dismissible" roler="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>Heads up!</strong> <%-info %>
+    </div>
+  <% } %>
+  <% if (locals.warning) { %>
+    <div class="alert alert-warning alert-dismissible" roler="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>Warning!</strong> <%-warning %>
+    </div>
+  <% } %>
+  <% if (locals.error) { %>
+    <div class="alert alert-danger alert-dismissible" roler="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>Error subscribing!</strong> <%-error %>
+    </div>
+  <% } %>
+  <% if (locals.danger) { %>
+    <div class="alert alert-danger alert-dismissible" roler="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>Something went wrong!</strong> <%-danger %>
+    </div>
+  <% } %>
