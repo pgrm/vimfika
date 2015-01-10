@@ -42,6 +42,7 @@ export interface IToken extends mongoose.Document {
 
     isValidFor(action: string): boolean;
     confirmSubscriber(cb: (error?: any, subscriber?: mS.ISubscriber) => void);
+    confirmUnsubscribe(cb: (error?: any, subscriber?: mS.ISubscriber) => void);
 }
 
 (<any>TokenSchema).methods.isValidFor = function(action: string) {
@@ -50,9 +51,7 @@ export interface IToken extends mongoose.Document {
 };
 
 (<any>TokenSchema).methods.confirmSubscriber = function(cb: (error?: any, subscriber?: mS.ISubscriber) => void) {
-    var t = <IToken>this;
-
-    mS.Subscriber.findById(t.subscriber, (err, subscriber) => {
+    useToken(<IToken>this, (err, subscriber) => {
         if (!err) {
             if (!subscriber.confirmed) {
                 subscriber.confirmed = true;
@@ -66,9 +65,30 @@ export interface IToken extends mongoose.Document {
             cb(err);
         }
     });
-    t.used = true;
-    t.usedAt = new Date();
-    t.save();
+};
+
+(<any>TokenSchema).methods.confirmUnsubscribe = function(cb: (error?: any, subscriber?: mS.ISubscriber) => void) {
+    useToken(<IToken>this, (err, subscriber) => {
+        if (!err) {
+            if (!subscriber.unsubscribed) {
+                subscriber.confirmed = false;
+                subscriber.unsubscribed = true;
+                subscriber.unsubscribedAt = new Date();
+                subscriber.save(cb);
+            } else {
+                cb(null, subscriber);
+            }
+        } else {
+            cb(err);
+        }
+    });
 };
 
 export var Token = config.dbConnection.model<IToken>("Token", TokenSchema, "tokens");
+
+export function useToken(token: IToken, cb: (error?: any, subscriber?: mS.ISubscriber) => void) {
+    mS.Subscriber.findById(token.subscriber, cb);
+    token.used = true;
+    token.usedAt = new Date();
+    token.save();
+}

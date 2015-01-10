@@ -32,7 +32,8 @@ export var SubscriberSchema = new mongoose.Schema({
     confirmedAt: Date,
     unsubscribeToken: {
         type: String,
-        default: uuid.v4
+        default: uuid.v4,
+        required: true
     },
     unsubscribed: {
         type: Boolean,
@@ -40,6 +41,11 @@ export var SubscriberSchema = new mongoose.Schema({
         required: true
     },
     unsubscribedAt: Date
+});
+
+SubscriberSchema.virtual('unsubscribeUrl').get(function() {
+    var s = <ISubscriber>this;
+    return '/unsubscribe/' + s.unsubscribeToken + '/' + s.email;
 });
 
 (<any>SubscriberSchema).methods.sendConfirmationMail = function(cb: (err) => void) {
@@ -52,18 +58,34 @@ export var SubscriberSchema = new mongoose.Schema({
         } else {
             cb(err);
         }
-    })
-}
+    });
+};
+
+(<any>SubscriberSchema).methods.unsubscribe = function(cb: (err) => void) {
+    var s = <ISubscriber>this;
+    var token = new mT.Token({subscriber: s._id, allowedAction: 'unsubscribe'});
+
+    token.save((err, res: mT.IToken) => {
+        if (!err) {
+            mails.sendUnsubscribeMail(s.email, res._id, cb);
+        } else {
+            cb(err);
+        }
+    });
+};
 
 export interface ISubscriber extends mongoose.Document {
     email: string;
     subscribedAt?: Date;
     confirmed?: boolean;
     confirmedAt?: Date;
+    unsubscribeToken?: string;
     unsubscribed?: boolean;
     unsubscribedAt?: Date;
+    unsubscribeUrl?: string;
 
     sendConfirmationMail(cb: (err) => void);
+    unsubscribe(cb: (err) => void);
 }
 
 export var Subscriber = config.dbConnection.model<ISubscriber>("Subscriber", SubscriberSchema, "subscribers");
