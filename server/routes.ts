@@ -1,7 +1,8 @@
 /// <reference path="../typings/tsd.d.ts" />
 
-import express = require( 'express');
-import models = require('./models');
+import express = require('express');
+import mS = require('./model.subscriber');
+import mT = require('./model.token');
 
 export var router = express.Router();
 
@@ -12,66 +13,44 @@ router.get('/', (req, res) => {
 });
 
 router.post('/signup', (req, res) => {
-    var subscriber = new models.Subscriber(req.body);
+    var subscriber = new mS.Subscriber(req.body);
 
     subscriber.validate((err) => {
         if (!err) {
-            subscriber.save(sendConfirmationMailOrHandleSaveErrors(subscriber.email, res));
+            subscriber.save(mS.sendConfirmationMailOrHandleSaveErrors(subscriber.email, res));
         } else {
             showError(res, err);
         }
     });
 });
 
-function sendConfirmationMailOrHandleSaveErrors(email: string, res: express.Response) {
-    return ((error, subscriber: models.ISubscriber) => {
-        if (!error) {
-            subscriber.sendConfirmationMail((err) => {
+router.get('/confirm/:token', (req, res, next) => {
+    mT.Token.findById(req.params.token, (error, token) => {
+        if (!error && token.isValidFor('confirmation')) {
+            token.confirmSubscriber((err, subscriber) => {
                 if (!err) {
-                    res.render('confirmationSent', getViewObject({subscriber: subscriber}));
+                    res.render('confirmed', getViewObject({subscriber: subscriber}))
                 } else {
-                    showError(res, err); 
+                    showError(res, err, 'Confirmation failed, please try signing up again.');
                 }
             });
         } else {
-            showErrorOrResignup(email, res, error);
+            if (!error) {
+                res.statusCode = 400;
+                error = new Error("This URL isn't valid anymore.")
+            }
+            next(error);
         }
     });
-}
+});
 
-function showErrorOrResignup(email: string, res: express.Response, error: any) {
-    if (isUniqueKeyConstraint(error)) {
-        models.Subscriber.findOne({email: email}, (err, subscriber) => {
-            if (!err) {
-                if (subscriber.confirmed) {
-                    return res.render('index', 
-                        getViewObject({success: 'You are already subscribed for a daily fika with Vim tips.'}));
-                } else {
-                    subscriber.unsubscribed = false;
-                    subscriber.unsubscribedAt = null;
-                    subscriber.save(sendConfirmationMailOrHandleSaveErrors(email, res));
-                }
-            } else {
-                showError(res, error);
-            }
-        });
-    } else {
-        showError(res, error);
-    }
-}
-
-function showError(res: express.Response, err: any) {
+export function showError(res: express.Response, err: any, errTitle: string = 'Error subscribing!') {
     console.log(err);
-    res.render('index', getViewObject({error: err}));
+    res.render('index', getViewObject({error: err, errorTitle: errTitle}));
 }
 
-function getViewObject(data?: any): any {
+export function getViewObject(data?: any): any {
     if (!data) { data = {} };
     data.title = 'VimFika'
     return data;
 }
-
-function isUniqueKeyConstraint(error: any) {
-    return error && error.name == 'MongoError' && error.code == 11000;
-}
-

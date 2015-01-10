@@ -1,6 +1,7 @@
 /// <reference path="../typings/tsd.d.ts" />
 
 import nodemailer = require('nodemailer');
+import util = require('util');
 
 var smtpPool = require('nodemailer-smtp-pool');
 
@@ -17,14 +18,20 @@ function getSmtpOptions(): NodemailerSMTPTransportOptions {
 }
 
 export function sendConfirmationMail(to: string, token: string, cb: (err) => void) {
-    var mailOptions: MailComposer = {
-        from: 'vimfika@logtank.com',
+    var mailText = 'Hey, thank you for subscribing to VimFika, to get daily tips about Vim. ' +
+                   'Please click on the following link to confirm your subscription: ' +
+                   'http://vimfika.logtank.com/confirm/%s' +
+                   "\n\nIf you didn't subscribe to VimFika, you can ignore this email.";
+
+    sendMail(to, 'Confirm subscription', util.format(mailText, token), cb);
+}
+
+export function sendMail(to: string, subject: string, text: string, cb:(err) => void) {
+    var mail: MailComposer = {
+        from: 'VimFika <vimfika@logtank.com>',
         to: to,
-        subject: '[VimFika] Confirm subscription',
-        text: token.toString()
+        subject: '[VimFika] ' + subject,
+        text: text
     };
-    console.log(getSmtpOptions());
-    console.log("before sending");
-    transport.sendMail(mailOptions, cb);
-    console.log("after sending started");
+    transport.sendMail(mail, cb);
 }

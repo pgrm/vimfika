@@ -39,7 +39,7 @@
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
-      <strong>Error subscribing!</strong> <%-error %>
+      <strong><%-locals.errorTitle %></strong> <%-error %>
     </div>
   <% } %>
   <% if (locals.danger) { %>

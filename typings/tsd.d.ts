@@ -6,3 +6,4 @@
 /// <reference path="mongoose/mongoose.d.ts" />
 /// <reference path="errorhandler/errorhandler.d.ts" />
 /// <reference path="nodemailer/nodemailer.d.ts" />
+/// <reference path="node-uuid/node-uuid.d.ts" />
