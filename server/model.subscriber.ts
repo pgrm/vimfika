@@ -40,8 +40,10 @@ export var SubscriberSchema = new mongoose.Schema({
         default: false,
         required: true
     },
-    unsubscribedAt: Date
+    unsubscribedAt: Date,
+    recievedLastTip: Date,
 });
+SubscriberSchema.index({recievedLastTip: 1});
 
 SubscriberSchema.virtual('unsubscribeUrl').get(function() {
     var s = <ISubscriber>this;

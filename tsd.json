@@ -31,6 +31,18 @@
     },
     "node-uuid/node-uuid.d.ts": {
       "commit": "4abbdff87f05616cfc421e0bf46c54a0ffdc06ce"
+    },
+    "cheerio/cheerio.d.ts": {
+      "commit": "4abbdff87f05616cfc421e0bf46c54a0ffdc06ce"
+    },
+    "rest/rest.d.ts": {
+      "commit": "4abbdff87f05616cfc421e0bf46c54a0ffdc06ce"
+    },
+    "when/when.d.ts": {
+      "commit": "4abbdff87f05616cfc421e0bf46c54a0ffdc06ce"
+    },
+    "highland/highland.d.ts": {
+      "commit": "4abbdff87f05616cfc421e0bf46c54a0ffdc06ce"
     }
   }
 }

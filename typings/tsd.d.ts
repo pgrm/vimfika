@@ -7,3 +7,7 @@
 /// <reference path="errorhandler/errorhandler.d.ts" />
 /// <reference path="nodemailer/nodemailer.d.ts" />
 /// <reference path="node-uuid/node-uuid.d.ts" />
+/// <reference path="cheerio/cheerio.d.ts" />
+/// <reference path="rest/rest.d.ts" />
+/// <reference path="when/when.d.ts" />
+/// <reference path="highland/highland.d.ts" />

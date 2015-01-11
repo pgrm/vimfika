@@ -2,7 +2,7 @@
 
 import mongoose = require('mongoose');
 
-export var dbUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/vimfika';
+export var dbUri = process.env.VIMFIKA_MONGODB_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/vimfika';
 export var dbConnection = mongoose.createConnection(dbUri);
 
 export function isUniqueKeyConstraint(error: any) {
