@@ -30,10 +30,17 @@ export var VimTipSchema = new mongoose.Schema({
         required: true,
         default: 0,
         min: 0
-    }
+    },
+    random: {
+        type: Number,
+        required: true,
+        default: Math.random
+    },
+    lastTimeSent: Date
 }, {strict: false});
 
-VimTipSchema.index({baseUrl: 1, url: 1}, {unique: true})
+VimTipSchema.index({baseUrl: 1, url: 1}, {unique: true});
+VimTipSchema.index({lastTimeSent: 1, random: 1})
 
 VimTipSchema.virtual('fullUrl').get(function() {
     var vt = <IVimTip>this;
@@ -46,12 +53,15 @@ VimTipSchema.virtual('fullUrl').get(function() {
 });
 
 export interface IVimTip extends mongoose.Document {
-    title: string;
-    baseUrl: string;
-    url: string;
-    fullUrl: string;
-    text: string;
-    importedAt: Date;
+    title?: string;
+    baseUrl?: string;
+    url?: string;
+    fullUrl?: string;
+    text?: string;
+    importedAt?: Date;
+    numberOfTimesSent?: number;
+    random?: number;
+    lastTimeSent?: Date;
 }
 
 export var VimTip = config.dbConnection.model<IVimTip>("VimTip", VimTipSchema, "vimtips");
