@@ -1,5 +1,5 @@
 require('typescript-require');
-//var debug = require('debug')('expressapp');
+var debug = require('debug')('expressapp');
 var app = require('./server/index');
 
 app.set('port', process.env.PORT || 3000);
