@@ -45,7 +45,7 @@ router.get('/unsubscribe/confirm/:token', (req, res, next) => {
         if (!error && token.isValidFor('unsubscribe')) {
             token.confirmUnsubscribe((err, subscriber) => {
                 if (!err) {
-                    res.render('unsubscribed', getViewObject({subscriber: subscriber}));
+                    res.render('index', getViewObject({info: 'You have successfully unsubscribed.'}));
                 } else {
                     showError(res, err, 'Error unsubscribing!', 'unsubscribe_failed')
                 }

@@ -17,6 +17,9 @@ function getSmtpOptions(): NodemailerSMTPTransportOptions {
     };
 }
 
+export function sendTip(to: string, tip: any, unsubscribeUrl: string) {
+}
+
 export function sendConfirmationMail(to: string, token: string, cb: (err) => void) {
     var mailText = 'Hey, thank you for subscribing to VimFika, to get daily tips about Vim. ' +
                    'Please click on the following link to confirm your subscription: ' +
@@ -29,7 +32,7 @@ export function sendConfirmationMail(to: string, token: string, cb: (err) => voi
 export function sendUnsubscribeMail(to: string, token: string, cb: (err) => void) {
     var mailText = 'Hello, sorry to hear that you chose to unsubscribe from VimFika. ' +
                    'If this is true please click on the following link to confirm it:  ' +
-                   'http://vimfika.logtank.com/confirm/%s' +
+                   'http://vimfika.logtank.com/unsubscribe/confirm/%s' +
                    '\n\nPlease also consider replying to this mail to give me feedback, ' +
                    'why you chose to leave VimFika. Thank you!' +
                    "\n\nIf you didn't choose to unsubscribe from VimFika, you can ignore this email.";

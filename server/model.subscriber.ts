@@ -45,7 +45,7 @@ export var SubscriberSchema = new mongoose.Schema({
 
 SubscriberSchema.virtual('unsubscribeUrl').get(function() {
     var s = <ISubscriber>this;
-    return '/unsubscribe/' + s.unsubscribeToken + '/' + s.email;
+    return 'http://vimfika.logtank.com/unsubscribe/' + s.unsubscribeToken + '/' + s.email;
 });
 
 (<any>SubscriberSchema).methods.sendConfirmationMail = function(cb: (err) => void) {
