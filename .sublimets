@@ -1,5 +1,5 @@
 {
-    "root": "app.ts", 
+    "root": "server/index.ts", 
     "settings": {
         "build_on_save": false, 
         "build_parameters": {
