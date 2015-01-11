@@ -8,7 +8,7 @@ import bodyParser = require('body-parser');
 import errorHandler = require('errorhandler')
 var favicon = require('serve-favicon');
 
-import website = require('./routes/index');
+import website = require('./server/routes');
 
 var app = express();
 
