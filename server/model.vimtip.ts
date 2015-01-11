@@ -24,6 +24,12 @@ export var VimTipSchema = new mongoose.Schema({
         type: Date,
         required: true,
         default: Date.now
+    },
+    numberOfTimesSent: {
+        type: Number,
+        required: true,
+        default: 0,
+        min: 0
     }
 }, {strict: false});
 
