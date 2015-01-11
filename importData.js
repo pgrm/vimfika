@@ -1,4 +1,4 @@
 require('typescript-require');
-var app = require('./importer');
+var wikiaImporter = require('./importer.wikia');
 
-app.startImport();
+wikiaImporter.startImport();
