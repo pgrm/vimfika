@@ -1,13 +1,10 @@
 /// <reference path="../typings/tsd.d.ts" />
 
 import q = require('q');
-import debug = require('debug')
 
 import mS = require('./model.subscriber');
 import mV = require('./model.vimtip');
 import mails = require('./mails')
-
-var dbg = debug('index');
 
 export function sendRandomTipToAllSubscribers() {
     randomTip.getRandomTip().then(getAllSubscribersAndSendTip)
@@ -25,7 +22,7 @@ function getAllSubscribersAndSendTip(tip: mV.IVimTip) {
         if (!err) {
             safelySendAllMails(res, tip);
         } else {
-            dbg('Error getting a list of subscribers, trying later again: ' + err);
+            console.log('Error getting a list of subscribers, trying later again: ' + err);
             setTimeout(() => {getAllSubscribersAndSendTip(tip)}, 5000);
         }
     });                    
@@ -57,7 +54,7 @@ function sendTipToSubscriber(tip: mV.IVimTip, subscriber: mS.ISubscriber) {
 function reallySafeSubscriber(subscriber: mS.ISubscriber) {
     subscriber.save((err, res) => {
         if (err) {
-            dbg('Error saving updated subscriber, trying later again: ' + err);
+            console.log('Error saving updated subscriber, trying later again: ' + err);
             setTimeout(() => {reallySafeSubscriber(subscriber)}, 5000);
         }
     })      
@@ -79,7 +76,7 @@ class RandomTip {
     }
 
     public getRandomTip(): q.Promise<mV.IVimTip> {
-        dbg('Asking for random tip');
+        console.log('Asking for random tip');
         if (!this.isTipUpToDate()) {
             this.initNewTip();
         }
@@ -89,7 +86,7 @@ class RandomTip {
 
     private initNewTip() {
         if (!this.gettingNewTip) {
-            dbg('Getting new random tip');
+            console.log('Getting new random tip');
             this.gettingNewTip = true;
             this.getRandomTipPromise = q.defer<mV.IVimTip>();
             this.runMongooseQueryToGetNewTip();
@@ -108,7 +105,7 @@ class RandomTip {
             this.gettingNewTip = false;
             this.getRandomTipPromise.resolve(newTip);
         } else {
-            dbg('Error getting a new random tip, trying later again: ' + err);
+            console.log('Error getting a new random tip, trying later again: ' + err);
             setTimeout(() => {this.runMongooseQueryToGetNewTip()}, 5000);
         }
     }

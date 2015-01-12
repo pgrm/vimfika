@@ -5,12 +5,10 @@ import rest = require('rest');
 import mime = require('rest/interceptor/mime');
 import errorCode = require('rest/interceptor/errorCode');
 import mongoose = require('mongoose');
-import debug = require('debug');
 
 import model = require('./server/model.vimtip');
 
 var htmlToText = require('html-to-text');
-var dbg = debug('importer');
 
 var client = rest.wrap(mime).wrap(errorCode);
 
@@ -32,7 +30,7 @@ export function startImport() {
         //items.forEach(fetchAndSaveArticle);
         safelyFetschAllArticles(items, fetchAndSaveArticle);
     }, (error) => {
-        dbg(error);
+        console.log(error);
     });
 }
 
@@ -48,13 +46,13 @@ function safelyFetschAllArticles(items: IApiArticle[], cb: (article: IApiArticle
 }
 
 function fetchAndSaveArticle(article: IApiArticle) {
-    dbg('Downloading article ' + article.title);
+    console.log('Downloading article ' + article.title);
     client(hostUrl + article.url).then((response) => {
         parseHtmlAndSaveArticle(article, response.entity);
     }, (error) => {
-        dbg('Error fetching article ' + article.title);
-        dbg(error);
-        dbg('Trying again later');
+        console.log('Error fetching article ' + article.title);
+        console.log(error);
+        console.log('Trying again later');
 
         setTimeout(() => {
             fetchAndSaveArticle(article);    
@@ -65,7 +63,7 @@ function fetchAndSaveArticle(article: IApiArticle) {
 function parseHtmlAndSaveArticle(article: IApiArticle, html: string) {
     var articleHtml = parseAndFilterHtml(html);
 
-    article.text = htmlToText.fromString(articleHtml.html(), {hideLinkHrefIfSameAsText: true, linkHrefBaseUrl: hostUrl});
+    article.text = htmlToText.fromString(articleHtml.html(), {hideLinkHrefIfSameAsText: true, linkHrefBaseUrl: hostUrl, tables: true});
     article.baseUrl = hostUrl;
     saveVimTipToDb(article);
 }
@@ -102,18 +100,18 @@ function parseAndFilterHtml(html: string): Cheerio {
 function saveVimTipToDb(article: model.IVimTip) {
     var vimTip = new model.VimTip(article);
 
-    dbg('Saving article ' + article.title);
+    console.log('Saving article ' + article.title);
     vimTip.save((err, res: model.IVimTip) => {
         if (err) {
-            dbg('Error saving article ' + article.title);
-            dbg(err);
-            dbg('Trying again later');
+            console.log('Error saving article ' + article.title);
+            console.log(err);
+            console.log('Trying again later');
 
             setTimeout(() => {
                 saveVimTipToDb(article);    
             }, 10000);    
         } else {
-            dbg('Article ' + res.title + ' saved successfully with the id ' + res._id);
+            console.log('Article ' + res.title + ' saved successfully with the id ' + res._id);
         }
     });
 }

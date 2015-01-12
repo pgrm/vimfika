@@ -6,14 +6,12 @@ import logger = require('morgan');
 import cookieParser = require('cookie-parser');
 import bodyParser = require('body-parser');
 import errorHandler = require('errorhandler')
-import debug = require('debug')
 var favicon = require('serve-favicon');
 var CronJob = require('cron').CronJob;
 
 import website = require('./routes');
 import subscriptions = require('./subscriptions');
 
-var dbg = debug('index');
 var app = express();
 
 // view engine setup
@@ -45,5 +43,5 @@ export = app;
 var job = new CronJob('00 30 */2 * * *', function() {
     subscriptions.sendRandomTipToAllSubscribers();
 }, function() {
-    dbg('send mail service completed at ' + new Date());   
+    console.log('send mail service completed at ' + new Date());   
 }, true);
