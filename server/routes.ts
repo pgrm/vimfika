@@ -10,7 +10,7 @@ export var router = express.Router();
 
 // GET home page.
 router.get('/', (req, res) => {
-  res.render('index', getViewObject());
+  res.render('index', getViewObject({bodyClass: 'full-image'}));
 });
 
 router.post('/subscribe', (req, res) => {

@@ -10,6 +10,7 @@ var favicon = require('serve-favicon');
 var CronJob = require('cron').CronJob;
 
 import website = require('./routes');
+import devRoutes = require('./routes.dev');
 import subscriptions = require('./subscriptions');
 
 var app = express();
@@ -29,6 +30,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/', website.router);
+
+if (process.env.VIMFIKA_ENABLE_DEV_ROUTES) {
+	app.use('/', devRoutes.router);
+}
 
 /// redirect all invalid urls back to index
 app.use((req, res) => {
