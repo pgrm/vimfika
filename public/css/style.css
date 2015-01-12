@@ -1,6 +1,53 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400,300,600&subset=latin,latin-ext);
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; }
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  background-color: #E2E7EA; }
+
+h1, h3 {
+  font-weight: 300; }
+
+hr {
+  border-color: black; }
 
 a {
-  color: #00B7FF; }
+  color: #0066BE; }
+
+.full-image {
+  background: url(../images/Coffee-Dessert.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover; }
+
+.full-image-text {
+  background-color: rgba(255, 255, 255, 0.3);
+  padding-bottom: 50px;
+  text-align: center; }
+
+.custom-button {
+  border-radius: 0px;
+  background-image: none;
+  box-shadow: none;
+  border-color: #337ab7; }
+
+.custom-input-addon {
+  border-radius: 0;
+  background-color: #b8daf7;
+  border: none;
+  color: #333; }
+
+.custom-input {
+  border-radius: 0px;
+  border: none; }
+
+@media (max-width: 767px) {
+  .custom-button {
+    display: table;
+    margin: auto; }
+
+  .form-group {
+    display: table;
+    margin: auto;
+    margin-bottom: 20px; }
+ }
