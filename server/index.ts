@@ -10,7 +10,7 @@ var favicon = require('serve-favicon');
 var CronJob = require('cron').CronJob;
 
 import website = require('./routes');
-import subscriptions = require('subscriptions');
+import subscriptions = require('./subscriptions');
 
 var app = express();
 
