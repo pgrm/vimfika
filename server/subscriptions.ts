@@ -1,10 +1,13 @@
 /// <reference path="../typings/tsd.d.ts" />
 
 import q = require('q');
+import debug = require('debug')
 
 import mS = require('./model.subscriber');
 import mV = require('./model.vimtip');
 import mails = require('./mails')
+
+var dbg = debug('index');
 
 export function sendRandomTipToAllSubscribers() {
     randomTip.getRandomTip().then(getAllSubscribersAndSendTip)
@@ -17,12 +20,12 @@ export function sendRandomTipToNewSubscriber(subscriber: mS.ISubscriber) {
 }
 
 function getAllSubscribersAndSendTip(tip: mV.IVimTip) {
-    var query = mS.Subscriber.find({recievedLastTip: {$lt: today()}}).limit(200);
+    var query = mS.Subscriber.find({recievedLastTip: {$lt: today()}}).limit(process.env.SENDMAIL_LIMIT || 200);
     query.exec((err, res: mS.ISubscriber[]) => {
         if (!err) {
             safelySendAllMails(res, tip);
         } else {
-            console.log('Error getting a list of subscribers, trying later again: ' + err);
+            dbg('Error getting a list of subscribers, trying later again: ' + err);
             setTimeout(() => {getAllSubscribersAndSendTip(tip)}, 5000);
         }
     });                    
@@ -40,7 +43,24 @@ function safelySendAllMails(items: mS.ISubscriber[], tip: mV.IVimTip) {
 }
 
 function sendTipToSubscriber(tip: mV.IVimTip, subscriber: mS.ISubscriber) {
-    mails.sendMailPerserving(subscriber.email, tip.title, tip.getMailText(subscriber.unsubscribeUrl))
+    mails.sendMailPerserving(subscriber.email, tip.title, tip.getMailText(subscriber.unsubscribeUrl));
+    
+    subscriber.recievedLastTip = new Date();
+    subscriber.recievedNumberOfTips++;
+    subscriber.save();
+
+    tip.numberOfTimesSent++;
+    tip.lastTimeSent = new Date();
+    tip.save();
+}
+
+function reallySafeSubscriber(subscriber: mS.ISubscriber) {
+    subscriber.save((err, res) => {
+        if (err) {
+            dbg('Error saving updated subscriber, trying later again: ' + err);
+            setTimeout(() => {reallySafeSubscriber(subscriber)}, 5000);
+        }
+    })      
 }
 
 function today(): Date {
@@ -59,6 +79,7 @@ class RandomTip {
     }
 
     public getRandomTip(): q.Promise<mV.IVimTip> {
+        dbg('Asking for random tip');
         if (!this.isTipUpToDate()) {
             this.initNewTip();
         }
@@ -68,6 +89,7 @@ class RandomTip {
 
     private initNewTip() {
         if (!this.gettingNewTip) {
+            dbg('Getting new random tip');
             this.gettingNewTip = true;
             this.getRandomTipPromise = q.defer<mV.IVimTip>();
             this.runMongooseQueryToGetNewTip();
@@ -76,7 +98,7 @@ class RandomTip {
 
     private runMongooseQueryToGetNewTip() {
         var query = mV.VimTip.find({}).sort({lastTimeSent: 1, random: 1}).limit(1);
-        query.exec((err, res: mV.IVimTip[]) => this.initNewTipCb(err, res[1]));                    
+        query.exec((err, res: mV.IVimTip[]) => this.initNewTipCb(err, res[0]));                    
     }
 
     private initNewTipCb(err: any, newTip: mV.IVimTip) {
@@ -86,7 +108,7 @@ class RandomTip {
             this.gettingNewTip = false;
             this.getRandomTipPromise.resolve(newTip);
         } else {
-            console.log('Error getting a new random tip, trying later again: ' + err);
+            dbg('Error getting a new random tip, trying later again: ' + err);
             setTimeout(() => {this.runMongooseQueryToGetNewTip()}, 5000);
         }
     }

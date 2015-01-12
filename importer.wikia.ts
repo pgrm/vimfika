@@ -5,10 +5,12 @@ import rest = require('rest');
 import mime = require('rest/interceptor/mime');
 import errorCode = require('rest/interceptor/errorCode');
 import mongoose = require('mongoose');
+import debug = require('debug');
 
 import model = require('./server/model.vimtip');
 
 var htmlToText = require('html-to-text');
+var dbg = debug('importer');
 
 var client = rest.wrap(mime).wrap(errorCode);
 
@@ -30,7 +32,7 @@ export function startImport() {
         //items.forEach(fetchAndSaveArticle);
         safelyFetschAllArticles(items, fetchAndSaveArticle);
     }, (error) => {
-        console.log(error);
+        dbg(error);
     });
 }
 
@@ -46,13 +48,13 @@ function safelyFetschAllArticles(items: IApiArticle[], cb: (article: IApiArticle
 }
 
 function fetchAndSaveArticle(article: IApiArticle) {
-    console.log('Downloading article ' + article.title);
+    dbg('Downloading article ' + article.title);
     client(hostUrl + article.url).then((response) => {
         parseHtmlAndSaveArticle(article, response.entity);
     }, (error) => {
-        console.log('Error fetching article ' + article.title);
-        console.log(error);
-        console.log('Trying again later');
+        dbg('Error fetching article ' + article.title);
+        dbg(error);
+        dbg('Trying again later');
 
         setTimeout(() => {
             fetchAndSaveArticle(article);    
@@ -100,18 +102,18 @@ function parseAndFilterHtml(html: string): Cheerio {
 function saveVimTipToDb(article: model.IVimTip) {
     var vimTip = new model.VimTip(article);
 
-    console.log('Saving article ' + article.title);
+    dbg('Saving article ' + article.title);
     vimTip.save((err, res: model.IVimTip) => {
         if (err) {
-            console.log('Error saving article ' + article.title);
-            console.log(err);
-            console.log('Trying again later');
+            dbg('Error saving article ' + article.title);
+            dbg(err);
+            dbg('Trying again later');
 
             setTimeout(() => {
                 saveVimTipToDb(article);    
             }, 10000);    
         } else {
-            console.log('Article ' + res.title + ' saved successfully with the id ' + res._id);
+            dbg('Article ' + res.title + ' saved successfully with the id ' + res._id);
         }
     });
 }

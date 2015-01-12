@@ -46,6 +46,9 @@
     },
     "q/Q.d.ts": {
       "commit": "6ee44e03b86604f1188020a365281890140e4b9b"
+    },
+    "debug/debug.d.ts": {
+      "commit": "6ee44e03b86604f1188020a365281890140e4b9b"
     }
   }
 }

@@ -74,11 +74,6 @@ router.get('/unsubscribe/:token/:email', (req, res, next) => {
     })
 });
 
-router.get('/testmail', (req, res) => {
-
-    res.sendStatus(200);    
-})
-
 export function showError(res: express.Response, 
                           err: any, 
                           errTitle: string = 'Error subscribing!', 
