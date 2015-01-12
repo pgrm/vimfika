@@ -3,6 +3,7 @@
 import express = require('express');
 import mS = require('./model.subscriber');
 import mT = require('./model.token');
+import subscriptions = require('./subscriptions');
 
 export var router = express.Router();
 
@@ -29,6 +30,7 @@ router.get('/confirm/:token', (req, res, next) => {
         if (!error && token.isValidFor('confirmation')) {
             token.confirmSubscriber((err, subscriber) => {
                 if (!err) {
+                    subscriptions.sendRandomTipToNewSubscriber(subscriber);
                     res.render('confirmed', getViewObject({subscriber: subscriber}))
                 } else {
                     showError(res, err, 'Confirmation failed, please try subscribing again.');
@@ -73,7 +75,7 @@ router.get('/unsubscribe/:token/:email', (req, res, next) => {
 });
 
 router.get('/testmail', (req, res) => {
-    
+
     res.sendStatus(200);    
 })
 

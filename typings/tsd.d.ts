@@ -11,3 +11,4 @@
 /// <reference path="rest/rest.d.ts" />
 /// <reference path="when/when.d.ts" />
 /// <reference path="highland/highland.d.ts" />
+/// <reference path="q/Q.d.ts" />

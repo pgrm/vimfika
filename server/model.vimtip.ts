@@ -52,6 +52,11 @@ VimTipSchema.virtual('fullUrl').get(function() {
     }
 });
 
+(<any>VimTipSchema).methods.getMailText = function (unsubscribeUrl: string) {
+    return (<IVimTip>this).text + '\n\n\n' +
+        'You can unsubscribe any time from this service by clicking on the following link: ' + unsubscribeUrl; 
+}
+
 export interface IVimTip extends mongoose.Document {
     title?: string;
     baseUrl?: string;
@@ -62,6 +67,8 @@ export interface IVimTip extends mongoose.Document {
     numberOfTimesSent?: number;
     random?: number;
     lastTimeSent?: Date;
+
+    getMailText(unsubscribeUrl: string): string;
 }
 
 export var VimTip = config.dbConnection.model<IVimTip>("VimTip", VimTipSchema, "vimtips");

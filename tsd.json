@@ -43,6 +43,9 @@
     },
     "highland/highland.d.ts": {
       "commit": "4abbdff87f05616cfc421e0bf46c54a0ffdc06ce"
+    },
+    "q/Q.d.ts": {
+      "commit": "6ee44e03b86604f1188020a365281890140e4b9b"
     }
   }
 }

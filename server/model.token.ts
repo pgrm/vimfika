@@ -1,10 +1,16 @@
 /// <reference path="../typings/tsd.d.ts" />
 
 import mongoose = require('mongoose');
+import uuid = require('node-uuid');
 import config = require('./model.config');
 import mS = require('./model.subscriber');
 
 export var TokenSchema = new mongoose.Schema({
+    _id: {
+        type: String,
+        required: true,
+        default: uuid.v4
+    },
     timestamp: {
         type: Date,
         default: Date.now,

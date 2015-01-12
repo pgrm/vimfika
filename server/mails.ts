@@ -17,9 +17,6 @@ function getSmtpOptions(): NodemailerSMTPTransportOptions {
     };
 }
 
-export function sendTip(to: string, tip: any, unsubscribeUrl: string) {
-}
-
 export function sendConfirmationMail(to: string, token: string, cb: (err) => void) {
     var mailText = 'Hey, thank you for subscribing to VimFika, to get daily tips about Vim. ' +
                    'Please click on the following link to confirm your subscription: ' +
@@ -38,6 +35,15 @@ export function sendUnsubscribeMail(to: string, token: string, cb: (err) => void
                    "\n\nIf you didn't choose to unsubscribe from VimFika, you can ignore this email.";
 
     sendMail(to, 'Confirm unsubscribe', util.format(mailText, token), cb);
+}
+
+export function sendMailPerserving(to: string, subject: string, text: string) {
+    sendMail(to, subject, text, (err) => {
+        if (err) {
+            console.log('Error sending mail to ' + to + ', trying later again: ' + err);
+            setTimeout(() => {sendMailPerserving(to, subject, text)}, 10000);
+        }
+    })
 }
 
 export function sendMail(to: string, subject: string, text: string, cb:(err) => void) {

@@ -32,7 +32,7 @@ export var SubscriberSchema = new mongoose.Schema({
     confirmedAt: Date,
     unsubscribeToken: {
         type: String,
-        default: uuid.v4,
+        default: () => { return uuid.v4() + uuid.v4(); },
         required: true
     },
     unsubscribed: {
@@ -42,6 +42,11 @@ export var SubscriberSchema = new mongoose.Schema({
     },
     unsubscribedAt: Date,
     recievedLastTip: Date,
+    recievedNumberOfTips: {
+        type: Number,
+        default: 0,
+        required: true
+    }
 });
 SubscriberSchema.index({recievedLastTip: 1});
 
@@ -85,6 +90,8 @@ export interface ISubscriber extends mongoose.Document {
     unsubscribed?: boolean;
     unsubscribedAt?: Date;
     unsubscribeUrl?: string;
+    recievedLastTip?: Date;
+    recievedNumberOfTips?: number;
 
     sendConfirmationMail(cb: (err) => void);
     unsubscribe(cb: (err) => void);

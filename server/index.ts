@@ -7,8 +7,10 @@ import cookieParser = require('cookie-parser');
 import bodyParser = require('body-parser');
 import errorHandler = require('errorhandler')
 var favicon = require('serve-favicon');
+var CronJob = require('cron').CronJob;
 
 import website = require('./routes');
+import subscriptions = require('subscriptions');
 
 var app = express();
 
@@ -37,3 +39,9 @@ app.use((req, res) => {
 app.use(errorHandler());
 
 export = app;
+
+var job = new CronJob('00 30 */2 * * *', function() {
+    subscriptions.sendRandomTipToAllSubscribers();
+}, function() {
+    console.log('send mail service completed at ' + new Date());   
+}, true);
