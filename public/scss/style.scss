@@ -3,15 +3,19 @@
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
-  background-color: #F9F9F9;
+  background-color: #E2E7EA;
 }
 
 h1, h3{
 	font-weight:300;
 }
 
+hr{
+	border-color: black;
+}
+
 a {
-  color: #00B7FF; }
+  color: #0066BE; }
 
 .full-image{
 	background: url(../images/Coffee-Dessert.jpg) no-repeat center center fixed; 
