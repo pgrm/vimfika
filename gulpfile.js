@@ -4,14 +4,15 @@ var gulp = require('gulp'),
   sass = require('gulp-sass');
 
 gulp.task('sass', function () {
-  gulp.src('./public/scss/*.scss')
+  console.log('Compiling sass');
+  gulp.src('./public/scss/style.scss')
     .pipe(sass())
     .pipe(gulp.dest('./public/css'))
     .pipe(livereload());
 });
 
 gulp.task('watch', function() {
-  gulp.watch('./public/css/*.scss', ['sass']);
+  gulp.watch('./public/scss/*.scss', ['sass']);
 });
 
 gulp.task('develop', function () {
