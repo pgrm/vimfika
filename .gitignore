@@ -28,6 +28,5 @@ node_modules
 .lock-wscript
 
 public/components
-public/css
 .sass-cache
 tmp
