@@ -48,7 +48,11 @@ function safelyFetschAllArticles(items: IApiArticle[], cb: (article: IApiArticle
 function fetchAndSaveArticle(article: IApiArticle) {
     console.log('Downloading article ' + article.title);
     client(hostUrl + article.url).then((response) => {
-        parseHtmlAndSaveArticle(article, response.entity);
+        if (response.status.code == 404) {
+            console.log('WARNING: Page ' + hostUrl + article.url + ' could not be found');
+        } else {
+            parseHtmlAndSaveArticle(article, response.entity);
+        }
     }, (error) => {
         console.log('Error fetching article ' + article.title);
         console.log(error);
@@ -69,12 +73,15 @@ function parseHtmlAndSaveArticle(article: IApiArticle, html: string) {
 }
 
 function getNextFullArticle(items: IApiArticle[]): IApiArticle {
+    var obsoleteTipsTitleSchema = /^VimTip\d+$/;
     var article: IApiArticle = null;
 
     while (!article && items && items.length) {
         article = items.pop();
 
         if (isOnlyRedirectArticle(article)) {
+            article = null;
+        } else if (obsoleteTipsTitleSchema.test(article.title)) {
             article = null;
         }
     }
@@ -86,6 +93,8 @@ function parseAndFilterHtml(html: string): Cheerio {
     var $ = cheerio.load(html);
     var parsedArticle = $('#mw-content-text');
 
+    deleteByIdPersistently($, 'delete', parsedArticle);
+    deleteByIdPersistently($, 'News', parsedArticle);
     $('noscript', parsedArticle).remove();
     $('script', parsedArticle).remove();
     $('div>a', parsedArticle).remove();
@@ -95,6 +104,18 @@ function parseAndFilterHtml(html: string): Cheerio {
     $('nav', parsedArticle).remove();
 
     return parsedArticle;
+}
+
+function deleteByIdPersistently($: CheerioStatic, id: string, element: Cheerio) {
+    var item: Cheerio;
+    
+    if (id.indexOf('#') != 0) {
+        id = '#' + id;
+    }
+    do {
+        $(id, element).remove();
+        item = $(id, element);
+    } while(item && item.length);
 }
 
 function saveVimTipToDb(article: model.IVimTip) {
