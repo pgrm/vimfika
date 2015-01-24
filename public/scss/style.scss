@@ -50,6 +50,17 @@ a {
 	border:none;
 }
 
+.logo{
+	height:180px; 	
+	margin:0 auto;
+}
+
+.logoCircle{
+	height:230px;
+	margin:0 auto;
+	margin-top:70px;
+}
+
 @media (max-width: 767px) { 
 	.custom-button{
 		display: table;
@@ -60,5 +71,14 @@ a {
 		display: table;
 		margin: auto;
 		margin-bottom: 20px;
+	}
+
+	.logo{
+		height:150px;
+	}
+
+	.logoCircle{
+		height:200px;
+		margin-top:30px;
 	}
  }
