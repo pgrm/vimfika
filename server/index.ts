@@ -43,10 +43,14 @@ app.use((req, res) => {
 /// error handlers
 app.use(errorHandler());
 
-export = app;
-
 var job = new CronJob('00 30 */2 * * *', function() {
     subscriptions.sendRandomTipToAllSubscribers();
 }, function() {
-    console.log('send mail service completed at ' + new Date());   
+    console.log('send mail service completed at ' + new Date());
 }, true);
+
+app.set('port', process.env.PORT || 3000);
+
+var server = app.listen(app.get('port'), function() {
+  console.log('Express server listening on port ' + server.address().port);
+});

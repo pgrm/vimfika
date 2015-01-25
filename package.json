@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "start": "node server/index.js"
   },
   "dependencies": {
     "body-parser": "~1.10.0",
@@ -28,8 +28,9 @@
   },
   "devDependencies": {
     "gulp": "~3.8.10",
-    "gulp-sass": "~1.2.4",
+    "gulp-livereload": "~2.1.1",
     "gulp-nodemon": "~1.0.4",
-    "gulp-livereload": "~2.1.1"
+    "gulp-sass": "~1.2.4",
+    "gulp-typescript": "^2.4.1"
   }
 }
