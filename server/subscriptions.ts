@@ -12,12 +12,14 @@ export function sendRandomTipToAllSubscribers() {
 
 export function sendRandomTipToNewSubscriber(subscriber: mS.ISubscriber) {
     randomTip.getRandomTip().then(tip => {
-        sendTipToSubscriber(tip, subscriber);    
+        sendTipToSubscriber(tip, subscriber);
     })
 }
 
 function getAllSubscribersAndSendTip(tip: mV.IVimTip) {
-    var query = mS.Subscriber.find({recievedLastTip: {$lt: today()}}).limit(process.env.SENDMAIL_LIMIT || 200);
+    var query = mS.Subscriber.find({$and: [
+        {recievedLastTip: {$lt: today()}},
+        {confirmed: true}]}).limit(process.env.SENDMAIL_LIMIT || 200);
     query.exec((err, res: mS.ISubscriber[]) => {
         if (!err) {
             safelySendAllMails(res, tip);
@@ -25,7 +27,7 @@ function getAllSubscribersAndSendTip(tip: mV.IVimTip) {
             console.log('Error getting a list of subscribers, trying later again: ' + err);
             setTimeout(() => {getAllSubscribersAndSendTip(tip)}, 5000);
         }
-    });                    
+    });
 }
 
 function safelySendAllMails(items: mS.ISubscriber[], tip: mV.IVimTip) {
@@ -34,14 +36,14 @@ function safelySendAllMails(items: mS.ISubscriber[], tip: mV.IVimTip) {
     if (subscriber) {
         sendTipToSubscriber(tip, subscriber);
         setTimeout(() => {
-            safelySendAllMails(items, tip);    
+            safelySendAllMails(items, tip);
         }, 100);
     }
 }
 
 function sendTipToSubscriber(tip: mV.IVimTip, subscriber: mS.ISubscriber) {
     mails.sendMailPerserving(subscriber.email, tip.title, tip.getMailText(subscriber.unsubscribeUrl));
-    
+
     subscriber.recievedLastTip = new Date();
     subscriber.recievedNumberOfTips++;
     subscriber.save();
@@ -57,7 +59,7 @@ function reallySafeSubscriber(subscriber: mS.ISubscriber) {
             console.log('Error saving updated subscriber, trying later again: ' + err);
             setTimeout(() => {reallySafeSubscriber(subscriber)}, 5000);
         }
-    })      
+    })
 }
 
 function today(): Date {
@@ -82,7 +84,7 @@ class RandomTip {
         }
 
         return this.getRandomTipPromise.promise;
-    }    
+    }
 
     private initNewTip() {
         if (!this.gettingNewTip) {
@@ -95,7 +97,7 @@ class RandomTip {
 
     private runMongooseQueryToGetNewTip() {
         var query = mV.VimTip.find({}).sort({lastTimeSent: 1, random: 1}).limit(1);
-        query.exec((err, res: mV.IVimTip[]) => this.initNewTipCb(err, res[0]));                    
+        query.exec((err, res: mV.IVimTip[]) => this.initNewTipCb(err, res[0]));
     }
 
     private initNewTipCb(err: any, newTip: mV.IVimTip) {

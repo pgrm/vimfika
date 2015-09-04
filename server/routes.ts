@@ -53,7 +53,7 @@ router.get('/unsubscribe/confirm/:token', (req, res, next) => {
                 }
             });
         } else {
-            invalidUrlOrServerError(error, res, next);     
+            invalidUrlOrServerError(error, res, next);
         }
     });
 });
@@ -74,9 +74,9 @@ router.get('/unsubscribe/:token/:email', (req, res, next) => {
     })
 });
 
-export function showError(res: express.Response, 
-                          err: any, 
-                          errTitle: string = 'Error subscribing!', 
+export function showError(res: express.Response,
+                          err: any,
+                          errTitle: string = 'Error subscribing!',
                           view: string = 'index') {
     res.render(view, getViewObject({error: err, errorTitle: errTitle}));
 }
